@@ -16,8 +16,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-
-
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+LOGIN_REDIRECT_URL = '/login/'
+REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_URL = '/account/login/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -30,7 +34,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+PASSWORD_HASHERS = {
+        'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+        'django.contrib.auth.hashers.BCryptPasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',}
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rango'
+    'rango',
+    'registration'
 ]
 
 MIDDLEWARE = [
@@ -66,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -94,6 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': { 'min_length': 6, }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -125,4 +136,7 @@ STATIC_URL = '/static/'
 STAICFILES_DIRS = [
 ('static',STATIC_DIR)
 ]
-print("Static:", STAICFILES_DIRS)
+
+
+MEDIA_ROOT = MEDIA_DIR
+MEDIA_URL = '/media/'

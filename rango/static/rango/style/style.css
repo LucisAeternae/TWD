@@ -1,0 +1,7 @@
+#user_form>p {
+  display: flex;
+  flex-direction: column;
+}
+#user_form>p>input[type="text"],#user_form>p>input[type="email"],#user_form>p>input[type="password"],#user_form>p>input[type="url"] {
+  width: 50%;
+}
