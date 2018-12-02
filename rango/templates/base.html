@@ -36,16 +36,17 @@
                                 <a href="{% url 'add_category' %}">Add New Category</a>
                             </li>
                             <li>
-                                <form action="/rango/logout/">
-                                    <input type="submit" value="Logout" />
-                                </form>
+                                <a href="{% url 'auth_logout' %}?next=/rango/">Logout</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'auth_password_change' %}">Change password</a>
                             </li>
                         {% else %}
                             <li>
-                                <a href="{% url 'register' %}">Sign Up</a>
+                                <a href="{% url 'registration_register' %}">Sign Up</a>
                             </li>
                             <li>
-                                <a href="{% url 'login' %}">Login</a>
+                                <a href="{% url 'auth_login' %}">Login</a>
                             </li>
                         {% endif %}
                     </ul>
