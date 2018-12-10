@@ -3,16 +3,35 @@
 {% block title_block %}
     {{ category.name }}
 {% endblock %}
-
+{% block header_block %}
+    <form class="" action="{% url 'search' category.slug %}" method="post">
+        {% csrf_token %}
+        <input style="margin: 10px; margin-left: auto;" type="search" name="query" value="{{ query }}">
+        <input type="submit" value="Search">
+    </form>
+{% endblock %}
 {% block body_block %}
         {% if category %}
             <h1>{{ category.name }}</h1>
             {% if pages %}
                 <ul>
                 {% for page in pages %}
-                    <li> <a href="{{ page.url }}">{{ page.title }}</a> </li>
+                    <li> <a href="{% url 'goto'%}?page_id={{ page.id }}">{{ page.title }}</a> </li>
                     <p>{{ page.views }}</p>
                 {% endfor %}
+                    <li><strong>Views current category: {{ category_name_slug }}</strong> <br /></li>
+                    <p>
+                        <strong id="like_count">{{ category.likes }}</strong> people like this category
+                        {% if user.is_authenticated %}
+                            <p id="user">{{ user.id }} {{ category.get_users_liked }}</p>
+                            {% if user.id not in category.get_users_liked %}
+                            <button id="likes" data-category_id="{{ category.id }}" class="btn" type="button">Like</button>
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'add_page' category.slug %}">Add New Page</a></li>
+                    {% endif %}
                 </ul>
             {% else %}
                 <strong>No pages currently in category.</strong>

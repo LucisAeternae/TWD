@@ -4,7 +4,46 @@
 
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="/static/rango/style/style.css" type="text/css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>
+        $(document).ready(function() {
+                $('#about-btn').click( function(event) {
+                    alert('You clicked the button using JQuery!')
+                });
+        });
+        </script>
+        <script>
+        $(document).ready(function() {
+                $('#add_page_btn_reveal').click( function(event) {
+                    alert('You clicked the button using JQuery!');
+                    
+                });
+        });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#likes').click(function(){
+                    var category_id;
+                    category_id = $(this).attr("data-category_id");
+                    $.get('/rango/like_category/', {category_id: category_id}, function(data){
+                        $('#like_count').html(data[0]);
+                        $('#likes').hide();
+                    });
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#suggestion').keyup(function(){
+                    var query;
+                    query = $(this).val();
+                    $.get('/rango/sidebar_update/', {suggestion: query}, function(data){
+                        $('#cats').html(data);
+                    });
+                });
+            });
+        </script>
+        <link rel="stylesheet" href="{% static 'rango/style.css' %}" type="text/css" />
         <meta charset="UTF-8">
         <title>
         {% block title_block %}
@@ -13,49 +52,64 @@
         </title>
     </head>
 
-    <body>
-        <div style="display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between;" class="main_wrapper">
-
-
-            <div class="main">
-                <div>
-                    {% block body_block %}
-                    {% endblock %}
-                </div>
-                <hr />
-                <div>
-                    <ul>
-                          <li>
-                              <a href="{% url 'about' %}">About</a>
-                          </li>
-                          <li>
-                              <a href="{% url 'index' %}">Index</a>
-                          </li>
-                        {% if user.is_authenticated %}
-                            <li>
-                                <a href="{% url 'add_category' %}">Add New Category</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'auth_logout' %}?next=/rango/">Logout</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'auth_password_change' %}">Change password</a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a href="{% url 'registration_register' %}">Sign Up</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'auth_login' %}">Login</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-            <div style="" class="sidebar">
-                {% block sidebar_block %}
-                    {% get_category_list category %}
+    <body style="width: 1140px; margin: auto;">
+        <div class="main_wrapper">
+            <div class="header">
+                {% block header_block %}
                 {% endblock %}
+            </div>
+            <div style="display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between;" class="main">
+                <div class="main_body">
+                    <div>
+                        {% block body_block %}
+                        {% endblock %}
+                    </div>
+                    <hr />
+                    <div>
+                        <ul>
+                              <li>
+                                  <a href="{% url 'about' %}">About</a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'index' %}">Index</a>
+                              </li>
+                            {% if user.is_authenticated %}
+                                <li>
+                                    <a href="{% url 'add_category' %}">Add New Category</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'auth_logout' %}?next=/rango/">Logout</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'auth_password_change' %}">Change password</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{% url 'registration_register' %}">Sign Up</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'auth_login' %}">Login</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div style="border-left:1px solid black;" class="sidebar">
+                    <ul style="padding-left: 0;">
+                        <li style="margin-left: 10px; list-style: none;">Find Category</li>
+                        <form>
+                            <label></label>
+                            <li style="list-style: none;">
+                                <input style="margin-left: 10px;" type="text" id="suggestion" name="suggestion" value="">
+                            </li>
+                        </form>
+                    </ul>
+                    <div id="cats">
+                        {% block sidebar_block %}
+                            {% get_category_list category %}
+                        {% endblock %}
+                    </div>
+                </div>
             </div>
         </div>
     </body>

@@ -1,10 +1,35 @@
-<ul style="padding:0; list-style:none; border-left:1px solid black;">
+<ul style="padding:0; list-style:none;">
     {% if cats %}
         {% for c in cats %}
+            {% if user.is_authenticated %}
+                <button type="button" id="add_page_btn_reveal" name="add_page_btn_reveal">add page</button>
+            {% endif %}
             {% if c == act_cat %}
-                <li style="margin:10px;"><strong><a href="{% url 'show_category' c.slug %}">{{ c.name }}</a></strong></li>
+                <li style="margin:10px;">
+                    <strong><a href="{% url 'show_category' c.slug %}">{{ c.name }}</a></strong>
+                </li>
             {% else %}
-                <li style="margin:10px;"><a href="{% url 'show_category' c.slug %}">{{ c.name }}</a></li>
+                <li style="margin:10px;">
+                    <a href="{% url 'show_category' c.slug %}">{{ c.name }}</a>
+                    {% if user.is_authenticated %}
+                        <button type="button" id="add_page_btn_reveal" name="add_page_btn_reveal">add page</button>
+                        <div id="add_page_form" style="display:none;">
+                            <form id="page_form" action="{% url 'add_page' c.slug %}" method="post">
+                                {% csrf_token %}
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                                {% for field in form.visible_fields %}
+                                    {{ field.errors }}
+                                    {{ field.help_text }}
+                                    {{ field }}
+                                {% endfor %}
+                                <input type="submit" name="submit" value="Create Page">
+                            </form>
+                        </div>
+                    {% endif %}
+                </li>
+                </li>
             {% endif %}
         {% endfor %}
     {% else %}

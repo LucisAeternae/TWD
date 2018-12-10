@@ -8,7 +8,7 @@
         {% if category %}
         <h1>Add a Page</h1>
         <div>
-            <form style="display:flex; flex-direction:column; width:max-content;" id="page_form" action="{% url 'add_page' category.slug %}" method="post">
+            <form id="page_form" action="{% url 'add_page' category.slug %}" method="post">
                 {% csrf_token %}
                 {% for hidden in form.hidden_fields %}
                     {{ hidden }}

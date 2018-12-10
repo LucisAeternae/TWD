@@ -1,6 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+import json
 
 
 class Category(models.Model):
@@ -8,6 +9,13 @@ class Category(models.Model):
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     slug = models.SlugField(unique=True)
+    users_liked = models.CharField(max_length=200)
+
+    def set_users_liked(self, x):
+        self.users_liked = json.dumps(x)
+
+    def get_users_liked(self):
+        return json.loads(self.users_liked)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
